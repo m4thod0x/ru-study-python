@@ -16,7 +16,7 @@ class MapExercise:
 
         def check_condition(film: dict) -> bool:
             check_raiting = film["rating_kinopoisk"] != "" and float(film["rating_kinopoisk"]) > 0
-            check_country = film["country"] != "" and len(film["country"].split(",")) >= 2
+            check_country = film["country"] != "" and film["country"].find(",") > 0
             return check_raiting and check_country
 
         checked_list = [film for film in list_of_movies if check_condition(film)]
