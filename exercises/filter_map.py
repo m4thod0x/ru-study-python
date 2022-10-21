@@ -16,15 +16,21 @@ class FilterMapExercise:
         :return: Отфильтрованный список.
         """
 
-        def inner_filter_map(iter_list, res_list):
-            if iter_list == []:
-                return res_list
+        # def inner_filter_map(iter_list, res_list):
+        #     if iter_list == []:
+        #         return res_list
 
-            head, *tail = iter_list
-            new_elem = func(head)
-            if new_elem[0]:
-                res_list.append(new_elem[1])
-            return inner_filter_map(tail, res_list)
+        #     head, *tail = iter_list
+        #     new_elem = func(head)
+        #     if new_elem[0]:
+        #         res_list.append(new_elem[1])
+        #     return inner_filter_map(tail, res_list)
 
         result_list = []
-        return inner_filter_map(input_array, result_list)
+        # return inner_filter_map(input_array, result_list)
+        for elem in input_array:
+            new_elem = func(elem)
+            if new_elem[0]:
+                result_list.append(new_elem[1])
+
+        return result_list
