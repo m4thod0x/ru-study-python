@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, request
+from markupsafe import escape
 
 
 class FlaskExercise:
@@ -26,6 +27,49 @@ class FlaskExercise:
     В ответ должен вернуться статус 204
     """
 
+    users = {}
+
     @staticmethod
     def configure_routes(app: Flask) -> None:
-        pass
+        @app.post("/user")
+        def create_user():
+            req_dict = request.get_json()
+
+            if "name" in req_dict:
+                user = req_dict["name"]
+                FlaskExercise.users[user] = req_dict
+                response = ({"data": f"User {user} is created!"}, 201)
+            else:
+                response = ({"errors": {"name": "This field is required"}}, 422)
+            return response
+
+        @app.get("/user/<username>")
+        def user_get(username):
+            username = escape(username)
+            if username in FlaskExercise.users:
+                response = ({"data": f"My name is {username}"}, 200)
+            else:
+                response = ({"errors": {username: "This user not found"}}, 404)
+            return response
+
+        @app.patch("/user/<username>")
+        def update_user(username):
+            username = escape(username)
+            req_dict = request.get_json()
+            if username in FlaskExercise.users:
+                if "name" in req_dict.keys():
+                    user = req_dict["name"]
+                    FlaskExercise.users.pop(username)
+                    FlaskExercise.users[user] = req_dict
+                    response = ({"data": f"My name is {user}"}, 200)
+                else:
+                    response = ({"errors": {"name": "This field is required"}}, 422)
+            else:
+                response = app.response_class(status=204)
+            return response
+
+        @app.delete("/user/<username>")
+        def delete_user(username):
+            if username in FlaskExercise.users:
+                FlaskExercise.users.pop(username)
+            return app.response_class(status=204)
