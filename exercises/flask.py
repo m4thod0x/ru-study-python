@@ -65,11 +65,14 @@ class FlaskExercise:
                 else:
                     response = ({"errors": {"name": "This field is required"}}, 422)
             else:
-                response = app.response_class(status=204)
+                response = ({"errors": {username: "This user not found"}}, 404)
             return response
 
         @app.delete("/user/<username>")
         def delete_user(username):
             if username in FlaskExercise.users:
                 FlaskExercise.users.pop(username)
-            return app.response_class(status=204)
+                response = app.response_class(status=204)
+            else:
+                response = ({"errors": {username: "This user not found"}}, 404)
+            return response
