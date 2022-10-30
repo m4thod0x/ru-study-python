@@ -59,7 +59,7 @@ class FlaskExercise:
             if username in FlaskExercise.users:
                 if "name" in req_dict.keys():
                     user = req_dict["name"]
-                    FlaskExercise.users.pop(username)
+                    del FlaskExercise.users[username]
                     FlaskExercise.users[user] = req_dict
                     response = ({"data": f"My name is {user}"}, 200)
                 else:
@@ -71,7 +71,7 @@ class FlaskExercise:
         @app.delete("/user/<username>")
         def delete_user(username):
             if username in FlaskExercise.users:
-                FlaskExercise.users.pop(username)
+                del FlaskExercise.users[username]
                 response = app.response_class(status=204)
             else:
                 response = ({"errors": {username: "This user not found"}}, 404)
